@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import requests
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 
 PATH_IMAGES = "images"
@@ -58,9 +58,32 @@ def fetch_nasa_apod(api_key: str, limit: int = 30) -> None:
         download_image(url, filename)
 
 
+def fetch_nasa_epic(api_key: str) -> None:
+    url_api = "https://api.nasa.gov/EPIC/api/natural/images"
+    url_archive = "https://api.nasa.gov/EPIC/archive/natural"
+    params = {
+        "api_key" : api_key,
+    }
+
+    response = requests.get(url_api, params=params)
+    response.raise_for_status()
+    descriptions = response.json()
+    for index, description in enumerate(descriptions):
+        name_image = description["image"]
+        date_image = description["date"]
+
+        date_formatted = date_image.split()[0].replace("-", "/")
+        url = f"{url_archive}/{date_formatted}/png/{name_image}.png?api_key={api_key}"
+        
+        filename = f"nasa_epic_{index}.png"
+        download_image(url, filename)
+
+
+
 if __name__ == "__main__":
     load_dotenv()
     api_key_nasa = os.getenv("API_KEY_NASA")
 
-    fetch_nasa_apod(api_key=api_key_nasa, limit=30)
+    fetch_nasa_epic(api_key=api_key_nasa)
+    #fetch_nasa_apod(api_key=api_key_nasa, limit=30)
     #fetch_spacex_last_launch()
