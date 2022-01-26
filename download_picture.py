@@ -1,6 +1,7 @@
+import os
 import requests
 from pathlib import Path
-
+from urllib.parse import urlparse
 
 PATH_IMAGES = "images"
 
@@ -29,6 +30,13 @@ def download_image(url: str, filename: str) -> None:
         file.write(response.content)
 
 
+def get_ext(url: str) -> str:
+    path = urlparse(url).path
+    _, ext = os.path.splitext(path)
+    return ext
+
+
 if __name__ == "__main__":
-    fetch_spacex_last_launch()
-    
+    #fetch_spacex_last_launch()
+    url = "https://example.com/txt/hello%20world.txt?v=9#python"
+    print(get_ext(url))
