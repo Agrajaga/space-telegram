@@ -5,6 +5,20 @@ from pathlib import Path
 PATH_IMAGES = "images"
 
 
+def fetch_spacex_last_launch() -> None:
+    url_all = "https://api.spacexdata.com/v4/launches"
+    response = requests.get(url_all)
+    response.raise_for_status()
+    launches = response.json()
+    for launch in launches[::-1]:
+        urls = launch["links"]["flickr"]["original"]
+        if urls:
+            break
+    for index, url in enumerate(urls):
+        filename = f"spaceX_flight{launch['flight_number']}_{index}.jpg"
+        download_image(url, filename)
+
+
 def download_image(url: str, filename: str) -> None:
     headers = {"User-Agent" : "download_picture"}
     response = requests.get(url, headers=headers)
@@ -16,6 +30,5 @@ def download_image(url: str, filename: str) -> None:
 
 
 if __name__ == "__main__":
-    url_image = "https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg"
-    filename = "hubble.jpeg"
-    download_image(url_image, filename)
+    fetch_spacex_last_launch()
+    
