@@ -4,7 +4,8 @@ from time import sleep
 from dotenv import load_dotenv
 import requests
 from pathlib import Path
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse
+
 import telegram
 
 
@@ -12,7 +13,7 @@ PATH_IMAGES = "images"
 
 
 def download_image(url: str, filename: str) -> None:
-    headers = {"User-Agent" : "download_picture"}
+    headers = {"User-Agent": "download_picture"}
     response = requests.get(url, headers=headers)
     response.raise_for_status()
 
@@ -23,8 +24,7 @@ def download_image(url: str, filename: str) -> None:
 
 def get_ext(url: str) -> str:
     path = urlparse(url).path
-    _, ext = os.path.splitext(path)
-    return ext
+    return Path(path).suffix
 
 
 def fetch_spacex_last_launch() -> None:
@@ -44,10 +44,9 @@ def fetch_spacex_last_launch() -> None:
 def fetch_nasa_apod(api_key: str, limit: int = 30) -> None:
     url_apod = "https://api.nasa.gov/planetary/apod"
     params = {
-        "api_key" : api_key,
-        "count" : limit, 
+        "api_key": api_key,
+        "count": limit,
     }
-
     response = requests.get(url_apod, params=params)
     response.raise_for_status()
     descriptions = response.json()
@@ -65,22 +64,21 @@ def fetch_nasa_epic(api_key: str) -> None:
     url_api = "https://api.nasa.gov/EPIC/api/natural/images"
     url_archive = "https://api.nasa.gov/EPIC/archive/natural"
     params = {
-        "api_key" : api_key,
+        "api_key": api_key,
     }
 
     response = requests.get(url_api, params=params)
     response.raise_for_status()
     descriptions = response.json()
     for index, description in enumerate(descriptions):
-        name_image = description["image"]
+        name_image = f"{description['image']}.png"
         date_image = description["date"]
 
-        date_formatted = date_image.split()[0].replace("-", "/")
-        url = f"{url_archive}/{date_formatted}/png/{name_image}.png?api_key={api_key}"
-        
+        date_path = date_image.split()[0].replace("-", "/")
+        url = f"{url_archive}/{date_path}/png/{name_image}?api_key={api_key}"
+
         filename = f"nasa_epic_{index}.png"
         download_image(url, filename)
-
 
 
 if __name__ == "__main__":
@@ -96,10 +94,31 @@ if __name__ == "__main__":
         images = []
         if Path(PATH_IMAGES).is_dir():
             images = os.listdir(PATH_IMAGES)
-        if not images: 
-            fetch_nasa_apod(api_key=api_key_nasa, limit=30)
-            fetch_nasa_epic(api_key=api_key_nasa)
-            fetch_spacex_last_launch()
+        if not images:
+            try:
+                fetch_nasa_apod(api_key=api_key_nasa, limit=30)
+            except requests.exceptions.HTTPError as error:
+                print(f'An http-error has occurred: \
+                    {error.response.status_code} {error.response.reason}')
+            except requests.exceptions.Timeout:
+                print('Error: Timeout expired')
+
+            try:
+                fetch_nasa_epic(api_key=api_key_nasa)
+            except requests.exceptions.HTTPError as error:
+                print(f'An http-error has occurred: \
+                    {error.response.status_code} {error.response.reason}')
+            except requests.exceptions.Timeout:
+                print('Error: Timeout expired')
+
+            try:
+                fetch_spacex_last_launch()
+            except requests.exceptions.HTTPError as error:
+                print(f'An http-error has occurred: \
+                    {error.response.status_code} {error.response.reason}')
+            except requests.exceptions.Timeout:
+                print('Error: Timeout expired')
+
             continue
 
         image = choice(images)
