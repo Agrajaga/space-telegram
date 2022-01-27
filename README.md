@@ -17,7 +17,7 @@ API_KEY_NASA=<youre_api_key>
 SPACEPHOTOSBOT_TOKEN=<youre_bot_token>
 SPACEPHOTOS_CHANNEL_ID=<youre_channel_id>
 ```
-5. Add the `DELAY` parameter to the `.env` file. This option sets how many seconds between posting a photo
+5. If you want to change the interval between posting photos, you can add the `DELAY` parameter to the `.env` file. This option sets how many seconds between posting a photo. The default value is one day (86400 seconds).
 ```
 DELAY=<time_in_seconds>
 ```
