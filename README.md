@@ -2,6 +2,8 @@
 
 Simple script for publish amazing space photos to Telegram-channel.
 
+![image](https://user-images.githubusercontent.com/22379662/151451756-f218e37d-e9b7-44ea-90f7-afb39c9a4a6f.png)
+
 The script loads several photos from NASA APOD, NASA EPIC and SpaceX Launch resources. And with a given interval publishes them in the Telegram channel. When the photos run out, the script loads new ones.
 
 ## Usages
