@@ -10,7 +10,7 @@ import telegram
 
 
 PATH_IMAGES = "images"
-
+DEFAULT_DELAY = 86400
 
 def download_image(url: str, filename: str) -> None:
     headers = {"User-Agent": "download_picture"}
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     api_key_nasa = os.getenv("API_KEY_NASA")
     token_telegram = os.getenv("SPACEPHOTOSBOT_TOKEN")
     channel_id = os.getenv("SPACEPHOTOS_CHANNEL_ID")
-    delay = int(os.getenv("SPACE_TELEGRAM_DELAY"))
+    delay = int(os.getenv("SPACE_TELEGRAM_DELAY", DEFAULT_DELAY))
 
     bot = telegram.Bot(token=token_telegram)
 
