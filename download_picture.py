@@ -1,8 +1,11 @@
 import os
+from random import choice
+from time import sleep
 from dotenv import load_dotenv
 import requests
 from pathlib import Path
 from urllib.parse import urlparse, urljoin
+import telegram
 
 
 PATH_IMAGES = "images"
@@ -83,7 +86,25 @@ def fetch_nasa_epic(api_key: str) -> None:
 if __name__ == "__main__":
     load_dotenv()
     api_key_nasa = os.getenv("API_KEY_NASA")
+    token_telegram = os.getenv("SPACEPHOTOSBOT_TOKEN")
+    channel_id = os.getenv("SPACEPHOTOS_CHANNEL_ID")
+    delay = int(os.getenv("SPACE_TELEGRAM_DELAY"))
 
-    fetch_nasa_epic(api_key=api_key_nasa)
-    #fetch_nasa_apod(api_key=api_key_nasa, limit=30)
-    #fetch_spacex_last_launch()
+    bot = telegram.Bot(token=token_telegram)
+
+    while True:
+        images = []
+        if Path(PATH_IMAGES).is_dir():
+            images = os.listdir(PATH_IMAGES)
+        if not images: 
+            fetch_nasa_apod(api_key=api_key_nasa, limit=30)
+            fetch_nasa_epic(api_key=api_key_nasa)
+            fetch_spacex_last_launch()
+            continue
+
+        image = choice(images)
+        filename = Path(PATH_IMAGES).joinpath(image)
+        bot.send_photo(chat_id=channel_id, photo=open(filename, "rb"))
+        Path(filename).unlink()
+
+        sleep(delay)
