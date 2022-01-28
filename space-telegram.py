@@ -126,7 +126,8 @@ if __name__ == "__main__":
 
         filename = choice(filenames)
         filepath = Path(PATH_IMAGES).joinpath(filename)
-        bot.send_photo(chat_id=channel_id, photo=open(filepath, "rb"))
+        with open(filepath, "rb") as photo_file:
+            bot.send_photo(chat_id=channel_id, photo=photo_file)
         Path(filepath).unlink()
 
         sleep(delay)
