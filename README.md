@@ -14,12 +14,12 @@ The script loads several photos from NASA APOD, NASA EPIC and SpaceX Launch reso
 4. Create a file `.env` and put youre key, token and id in it
 ```
 NASA_API_KEY=<youre_api_key>
-SPACEPHOTOSBOT_TOKEN=<youre_bot_token>
-SPACEPHOTOS_CHANNEL_ID=<youre_channel_id>
+SPACEPHOTOS_TG_BOT_TOKEN=<youre_bot_token>
+SPACEPHOTOS_TG_CHANNEL_ID=<youre_channel_id>
 ```
 5. If you want to change the interval between posting photos, you can add the `DELAY` parameter to the `.env` file. This option sets how many seconds between posting a photo. The default value is one day (86400 seconds).
 ```
-DELAY=<time_in_seconds>
+SPACEPHOTOS_DELAY=<time_in_seconds>
 ```
 Run script
 ```

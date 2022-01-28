@@ -86,9 +86,9 @@ def fetch_nasa_epic(api_key: str) -> None:
 if __name__ == "__main__":
     load_dotenv()
     nasa_api_key = os.getenv("NASA_API_KEY")
-    telegram_token = os.getenv("SPACEPHOTOSBOT_TOKEN")
-    channel_id = os.getenv("SPACEPHOTOS_CHANNEL_ID")
-    delay = int(os.getenv("SPACE_TELEGRAM_DELAY", DEFAULT_DELAY))
+    telegram_token = os.getenv("SPACEPHOTOS_TG_BOT_TOKEN")
+    channel_id = os.getenv("SPACEPHOTOS_TG_CHANNEL_ID")
+    delay = int(os.getenv("SPACEPHOTOS_DELAY", DEFAULT_DELAY))
 
     bot = telegram.Bot(token=telegram_token)
 
