@@ -1,13 +1,12 @@
 import os
+from pathlib import Path
 from random import choice
 from time import sleep
-from dotenv import load_dotenv
-import requests
-from pathlib import Path
 from urllib.parse import urlparse
 
+import requests
 import telegram
-
+from dotenv import load_dotenv
 
 PATH_IMAGES = "images"
 DEFAULT_DELAY = 86400
