@@ -86,17 +86,17 @@ def fetch_nasa_epic(api_key: str) -> None:
 if __name__ == "__main__":
     load_dotenv()
     nasa_api_key = os.getenv("NASA_API_KEY")
-    telegram_token = os.getenv("SPACEPHOTOS_TG_BOT_TOKEN")
+    bot_token = os.getenv("SPACEPHOTOS_TG_BOT_TOKEN")
     channel_id = os.getenv("SPACEPHOTOS_TG_CHANNEL_ID")
     delay = int(os.getenv("SPACEPHOTOS_DELAY", DEFAULT_DELAY))
 
-    bot = telegram.Bot(token=telegram_token)
+    bot = telegram.Bot(token=bot_token)
 
     while True:
-        images = []
+        filenames = []
         if Path(PATH_IMAGES).is_dir():
-            images = os.listdir(PATH_IMAGES)
-        if not images:
+            filenames = os.listdir(PATH_IMAGES)
+        if not filenames:
             make_images_folder(PATH_IMAGES)
             try:
                 fetch_nasa_apod(api_key=nasa_api_key, limit=30)
@@ -124,9 +124,9 @@ if __name__ == "__main__":
 
             continue
 
-        image = choice(images)
-        filename = Path(PATH_IMAGES).joinpath(image)
-        bot.send_photo(chat_id=channel_id, photo=open(filename, "rb"))
-        Path(filename).unlink()
+        filename = choice(filenames)
+        filepath = Path(PATH_IMAGES).joinpath(filename)
+        bot.send_photo(chat_id=channel_id, photo=open(filepath, "rb"))
+        Path(filepath).unlink()
 
         sleep(delay)
