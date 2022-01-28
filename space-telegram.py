@@ -16,9 +16,9 @@ def make_images_folder(path: str) -> None:
     Path(path).mkdir(parents=True, exist_ok=True)
 
 
-def download_image(url: str, filename: str) -> None:
+def download_image(url: str, filename: str, params: dict = {}) -> None:
     headers = {"User-Agent": "download_picture"}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
     with open(f"{PATH_IMAGES}/{filename}", "wb") as file:
         file.write(response.content)
@@ -77,10 +77,13 @@ def fetch_nasa_epic(api_key: str) -> None:
         image_date = description["date"]
 
         date_path = image_date.split()[0].replace("-", "/")
-        url = f"{archive_url}/{date_path}/png/{image_name}?api_key={api_key}"
+        params = {
+            "api_key": api_key,
+        }
+        url = f"{archive_url}/{date_path}/png/{image_name}"
 
         filename = f"nasa_epic_{index}.png"
-        download_image(url, filename)
+        download_image(url, filename, params)
 
 
 if __name__ == "__main__":
