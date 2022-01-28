@@ -11,12 +11,15 @@ from dotenv import load_dotenv
 PATH_IMAGES = "images"
 DEFAULT_DELAY = 86400
 
+
+def make_images_folder(path: str) -> None:
+    Path(path).mkdir(parents=True, exist_ok=True)
+
+
 def download_image(url: str, filename: str) -> None:
     headers = {"User-Agent": "download_picture"}
     response = requests.get(url, headers=headers)
     response.raise_for_status()
-
-    Path(PATH_IMAGES).mkdir(parents=True, exist_ok=True)
     with open(f"{PATH_IMAGES}/{filename}", "wb") as file:
         file.write(response.content)
 
@@ -94,6 +97,7 @@ if __name__ == "__main__":
         if Path(PATH_IMAGES).is_dir():
             images = os.listdir(PATH_IMAGES)
         if not images:
+            make_images_folder(PATH_IMAGES)
             try:
                 fetch_nasa_apod(api_key=api_key_nasa, limit=30)
             except requests.exceptions.HTTPError as error:
