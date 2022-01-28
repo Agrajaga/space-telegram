@@ -13,7 +13,7 @@ The script loads several photos from NASA APOD, NASA EPIC and SpaceX Launch reso
 3. Create a Telegram channel and add the bot to administrators. Get the channel ID.
 4. Create a file `.env` and put youre key, token and id in it
 ```
-API_KEY_NASA=<youre_api_key>
+NASA_API_KEY=<youre_api_key>
 SPACEPHOTOSBOT_TOKEN=<youre_bot_token>
 SPACEPHOTOS_CHANNEL_ID=<youre_channel_id>
 ```
